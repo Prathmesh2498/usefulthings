@@ -38,6 +38,13 @@ const About: FC = () => {
               Shows you rubber ducks you can explain your code to.
             </p>
           </div>
+
+          <div className="feature-card website-card" onClick={() => window.open('https://prathmesh2498.github.io/pd/', '_blank')}>
+            <h3 className="feature-title">Personal Website</h3>
+            <p className="feature-description">
+              Learn More About Me
+            </p>
+          </div>
         </div>
       </div>
     </div>
