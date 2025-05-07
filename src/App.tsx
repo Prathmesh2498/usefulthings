@@ -1,25 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import About from './components/About';
+import Break from './components/Break';
+import Pomodoro from './components/Pomodoro';
+import Duck from './components/Duck';
 import './App.css';
+
+const AppContent = () => {
+  const location = useLocation();
+  const isBreakPage = location.pathname === '/break';
+
+  return (
+    <div className="App">
+      {!isBreakPage && <Navbar />}
+      <Routes>
+        <Route path="/" element={<About />} />
+        <Route path="/break" element={<Break />} />
+        <Route path="/pomodoro" element={<Pomodoro />} />
+        <Route path="/duck" element={<Duck />} />
+      </Routes>
+    </div>
+  );
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 

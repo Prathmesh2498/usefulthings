@@ -1,0 +1,143 @@
+.duck-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(1rem, 3vw, 2rem);
+  background: #f0e68c;  /* Darker yellow background (khaki) */
+  margin: 0;
+  max-width: 100%;
+  font-family: 'Courier New', monospace;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.duck-page h1 {
+  color: #8b4513;  /* Saddle brown for better contrast */
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.duck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  width: 100%;
+  padding: clamp(0.5rem, 2vw, 1rem);
+  max-width: min(900px, 95vw);
+  background: rgba(139, 69, 19, 0.1);
+  border-radius: 8px;
+}
+
+.duck-card {
+  background: rgba(218, 165, 32, 0.2);
+  border-radius: 8px;
+  padding: clamp(0.5rem, 1.5vw, 0.75rem);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
+  border: 1px solid rgba(139, 69, 19, 0.3);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.duck-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(139, 69, 19, 0.3);
+  background: rgba(218, 165, 32, 0.3);
+  border-color: rgba(139, 69, 19, 0.5);
+}
+
+.duck-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.selected-duck {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1rem);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  max-width: min(600px, 90vw);
+  margin: 0 auto;
+  background: rgba(139, 69, 19, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(139, 69, 19, 0.3);
+}
+
+.selected-duck h1 {
+  color: #8b4513;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin: 0;
+  font-weight: bold;
+}
+
+.selected-duck h2 {
+  color: #a0522d;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  margin: 0;
+  font-weight: normal;
+}
+
+.selected-duck-image {
+  max-width: min(300px, 80vw);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(139, 69, 19, 0.3);
+  border: 1px solid rgba(139, 69, 19, 0.3);
+}
+
+.back-button {
+  background: #8b4513;
+  color: #fff;
+  border: none;
+  padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+  border-radius: 6px;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: clamp(0.5rem, 1.5vw, 0.75rem);
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  border: 1px solid rgba(139, 69, 19, 0.5);
+  white-space: nowrap;
+}
+
+.back-button:hover {
+  background: #a0522d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.4);
+  border-color: rgba(139, 69, 19, 0.7);
+}
+
+/* Media Queries */
+@media (max-width: 480px) {
+  .duck-grid {
+    gap: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  .duck-card {
+    padding: 0.5rem;
+  }
+  
+  .selected-duck {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+} 
