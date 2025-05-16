@@ -34,14 +34,17 @@ const Pomodoro: React.FC = () => {
             setIsActive(false);
             if (!isBreak) {
               setIsBreak(true);
+              setIsActive(true);
               setMinutes(selectedPreset.break);
               setCycles(prev => prev + 1);
+              // Play notification sound
+              new Audio('/Start.wav').play().catch(() => {});   
             } else {
               setIsBreak(false);
               setMinutes(selectedPreset.work);
+              new Audio('/Stop.wav').play().catch(() => {}); 
             }
-            // Play notification sound
-            new Audio('/notification.mp3').play().catch(() => {});
+            
           } else {
             setMinutes(minutes - 1);
             setSeconds(59);
