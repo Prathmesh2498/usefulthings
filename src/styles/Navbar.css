@@ -46,8 +46,8 @@
 }
 
 .nav-link.active {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {

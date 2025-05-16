@@ -4,12 +4,11 @@ import "../styles/Break.css";
 
 const Break: FC = () => {
   const images: string[] = [
-    "https://images.unsplash.com/photo-1501854140801-50d01698950b", // Mountain lake
-    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e", // Forest
-    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05", // Mountain sunset
-    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e", // Forest path
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e", // Beach
-    "https://images.unsplash.com/photo-1472396961693-142e6e269027"  // Mountain range
+    "/P1.jpg",
+    "/P2.jpg",
+    "/P3.jpg",
+    "/P4.jpg",
+    "/P5.jpg"
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(
@@ -69,7 +68,7 @@ const Break: FC = () => {
           </div>
         )}
         <img 
-          src={`${images[currentImageIndex]}?auto=format&fit=crop&w=1920&q=80`}
+          src={images[currentImageIndex]}
           alt="nature" 
           className={`break-image ${!isLoading ? 'loaded' : ''}`}
           onLoad={handleImageLoad}
