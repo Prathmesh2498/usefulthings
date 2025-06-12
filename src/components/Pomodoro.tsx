@@ -24,27 +24,41 @@ const Pomodoro: React.FC = () => {
   const [selectedPreset, setSelectedPreset] = useState<TimerPreset>(presets[0]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let animationFrameId: number;
+    let lastUpdateTime = performance.now();
 
-    if (isActive) {
-      interval = setInterval(() => {
+    const updateTimer = (currentTime: number) => {
+      if (!isActive) return;
+
+      const deltaTime = currentTime - lastUpdateTime;
+      
+      // Only update if at least 1000ms have passed
+      if (deltaTime >= 1000) {
+        lastUpdateTime = currentTime;
+        
         if (seconds === 0) {
           if (minutes === 0) {
             // Timer completed
-            setIsActive(false);
             if (!isBreak) {
+              // Start break
               setIsBreak(true);
-              setIsActive(true);
               setMinutes(selectedPreset.break);
+              setSeconds(0);
               setCycles(prev => prev + 1);
-              // Play notification sound
-              new Audio('/Start.wav').play().catch(() => {});   
+              // Play notification sound in the next tick to not block the timer
+              requestAnimationFrame(() => {
+                new Audio('/Start.wav').play().catch(() => {});
+              });
             } else {
+              // End break
               setIsBreak(false);
               setMinutes(selectedPreset.work);
-              new Audio('/Stop.wav').play().catch(() => {}); 
+              setSeconds(0);
+              // Play notification sound in the next tick to not block the timer
+              requestAnimationFrame(() => {
+                new Audio('/Stop.wav').play().catch(() => {});
+              });
             }
-            
           } else {
             setMinutes(minutes - 1);
             setSeconds(59);
@@ -52,10 +66,21 @@ const Pomodoro: React.FC = () => {
         } else {
           setSeconds(seconds - 1);
         }
-      }, 1000);
+      }
+
+      animationFrameId = requestAnimationFrame(updateTimer);
+    };
+
+    if (isActive) {
+      lastUpdateTime = performance.now();
+      animationFrameId = requestAnimationFrame(updateTimer);
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
   }, [isActive, minutes, seconds, isBreak, selectedPreset]);
 
   const toggleTimer = () => {
