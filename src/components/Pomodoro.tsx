@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import '../styles/Pomodoro.css';
 
 type TimerPreset = {
@@ -13,6 +13,16 @@ const presets: TimerPreset[] = [
   { work: 90, break: 20, label: 'Long' },
 ];
 
+const STORAGE_KEY = 'pomodoro_timer_data';
+
+interface TimerData {
+  endTime: number; // UTC timestamp when timer should end
+  isBreak: boolean;
+  cycles: number;
+  workDuration: number;
+  breakDuration: number;
+}
+
 const Pomodoro: React.FC = () => {
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
@@ -22,73 +32,189 @@ const Pomodoro: React.FC = () => {
   const [customWork, setCustomWork] = useState(25);
   const [customBreak, setCustomBreak] = useState(5);
   const [selectedPreset, setSelectedPreset] = useState<TimerPreset>(presets[0]);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    let animationFrameId: number;
-    let lastUpdateTime = performance.now();
+  // Calculate remaining time from stored end time
+  const calculateRemainingTime = (endTime: number): { minutes: number; seconds: number } => {
+    const now = Date.now();
+    const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    return { minutes: mins, seconds: secs };
+  };
 
-    const updateTimer = (currentTime: number) => {
-      if (!isActive) return;
+  // Handle timer completion
+  const handleTimerComplete = useCallback((data: TimerData) => {
+    if (!data.isBreak) {
+      // Start break
+      const breakEndTime = Date.now() + data.breakDuration * 60 * 1000;
+      const newData: TimerData = {
+        endTime: breakEndTime,
+        isBreak: true,
+        cycles: data.cycles + 1,
+        workDuration: data.workDuration,
+        breakDuration: data.breakDuration,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+      setIsBreak(true);
+      setMinutes(data.breakDuration);
+      setSeconds(0);
+      setCycles(data.cycles + 1);
+      new Audio('/Start.wav').play().catch(() => {});
+    } else {
+      // End break, start work
+      const workEndTime = Date.now() + data.workDuration * 60 * 1000;
+      const newData: TimerData = {
+        endTime: workEndTime,
+        isBreak: false,
+        cycles: data.cycles,
+        workDuration: data.workDuration,
+        breakDuration: data.breakDuration,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+      setIsBreak(false);
+      setMinutes(data.workDuration);
+      setSeconds(0);
+      new Audio('/Stop.wav').play().catch(() => {});
+    }
+  }, []);
 
-      const deltaTime = currentTime - lastUpdateTime;
-      
-      // Only update if at least 1000ms have passed
-      if (deltaTime >= 1000) {
-        lastUpdateTime = currentTime;
-        
-        if (seconds === 0) {
-          if (minutes === 0) {
-            // Timer completed
-            if (!isBreak) {
-              // Start break
-              setIsBreak(true);
-              setMinutes(selectedPreset.break);
-              setSeconds(0);
-              setCycles(prev => prev + 1);
-              // Play notification sound in the next tick to not block the timer
-              requestAnimationFrame(() => {
-                new Audio('/Start.wav').play().catch(() => {});
-              });
-            } else {
-              // End break
-              setIsBreak(false);
-              setMinutes(selectedPreset.work);
-              setSeconds(0);
-              // Play notification sound in the next tick to not block the timer
-              requestAnimationFrame(() => {
-                new Audio('/Stop.wav').play().catch(() => {});
-              });
-            }
-          } else {
-            setMinutes(minutes - 1);
-            setSeconds(59);
-          }
-        } else {
-          setSeconds(seconds - 1);
-        }
+  // Update timer display from stored end time
+  const updateTimerFromStorage = useCallback(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return;
+
+    try {
+      const data: TimerData = JSON.parse(stored);
+      const remaining = calculateRemainingTime(data.endTime);
+
+      if (remaining.minutes === 0 && remaining.seconds === 0) {
+        // Timer completed
+        handleTimerComplete(data);
+      } else {
+        setMinutes(remaining.minutes);
+        setSeconds(remaining.seconds);
+        setIsBreak(data.isBreak);
+        setCycles(data.cycles);
       }
+    } catch (e) {
+      console.error('Error reading timer data:', e);
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [handleTimerComplete]);
 
-      animationFrameId = requestAnimationFrame(updateTimer);
+  // Start timer - save end time to localStorage
+  const startTimer = (workMinutes: number, breakMinutes: number, isBreakTime: boolean) => {
+    const duration = isBreakTime ? breakMinutes : workMinutes;
+    const endTime = Date.now() + duration * 60 * 1000;
+    
+    const timerData: TimerData = {
+      endTime,
+      isBreak: isBreakTime,
+      cycles: cycles,
+      workDuration: workMinutes,
+      breakDuration: breakMinutes,
     };
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(timerData));
+    setIsActive(true);
+    setIsBreak(isBreakTime);
+    setMinutes(duration);
+    setSeconds(0);
+  };
 
-    if (isActive) {
-      lastUpdateTime = performance.now();
-      animationFrameId = requestAnimationFrame(updateTimer);
+  // Stop timer - clear localStorage
+  const stopTimer = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setIsActive(false);
+  };
+
+  // Main timer update effect - only runs when tab is active
+  useEffect(() => {
+    if (!isActive) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
     }
 
-    return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
+    // Update immediately
+    updateTimerFromStorage();
+
+    // Update every second when tab is visible
+    const updateInterval = () => {
+      if (document.visibilityState === 'visible') {
+        updateTimerFromStorage();
       }
     };
-  }, [isActive, minutes, seconds, isBreak, selectedPreset]);
+
+    intervalRef.current = setInterval(updateInterval, 1000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isActive, updateTimerFromStorage]);
+
+  // Handle tab visibility changes
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && isActive) {
+        // Tab became active, recalculate from stored time
+        updateTimerFromStorage();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isActive, updateTimerFromStorage]);
+
+  // Restore timer state on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        const data: TimerData = JSON.parse(stored);
+        const remaining = calculateRemainingTime(data.endTime);
+        
+        if (remaining.minutes > 0 || remaining.seconds > 0) {
+          // Timer is still running
+          setMinutes(remaining.minutes);
+          setSeconds(remaining.seconds);
+          setIsBreak(data.isBreak);
+          setCycles(data.cycles);
+          setIsActive(true);
+          setSelectedPreset({
+            work: data.workDuration,
+            break: data.breakDuration,
+            label: 'Custom',
+          });
+        } else {
+          // Timer expired while tab was inactive
+          handleTimerComplete(data);
+        }
+      } catch (e) {
+        console.error('Error restoring timer:', e);
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, [handleTimerComplete]);
 
   const toggleTimer = () => {
-    setIsActive(!isActive);
+    if (isActive) {
+      stopTimer();
+    } else {
+      startTimer(selectedPreset.work, selectedPreset.break, isBreak);
+    }
   };
 
   const resetTimer = () => {
-    setIsActive(false);
+    stopTimer();
     setIsBreak(false);
     setMinutes(selectedPreset.work);
     setSeconds(0);
@@ -99,8 +225,8 @@ const Pomodoro: React.FC = () => {
   };
 
   const handlePresetChange = (preset: TimerPreset) => {
+    stopTimer();
     setSelectedPreset(preset);
-    setIsActive(false);
     setIsBreak(false);
     setMinutes(preset.work);
     setSeconds(0);
