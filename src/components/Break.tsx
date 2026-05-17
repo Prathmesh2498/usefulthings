@@ -1,18 +1,12 @@
 import { FC, useEffect, useState } from "react";
-import Navbar from "./Navbar";
 import "../styles/Break.css";
 
+const BREAK_IMAGES = ["/P1.jpg", "/P2.jpg", "/P3.jpg", "/P4.jpg", "/P5.jpg"];
+
 const Break: FC = () => {
-  const images: string[] = [
-    "/P1.jpg",
-    "/P2.jpg",
-    "/P3.jpg",
-    "/P4.jpg",
-    "/P5.jpg"
-  ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(
-    Math.floor(Math.random() * images.length)
+    Math.floor(Math.random() * BREAK_IMAGES.length)
   );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +15,7 @@ const Break: FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setIsLoading(true);
-      setCurrentImageIndex(Math.floor(Math.random() * images.length));
+      setCurrentImageIndex(Math.floor(Math.random() * BREAK_IMAGES.length));
     }, 15 * 60 * 1000); // 15 minutes in milliseconds
 
     return () => clearInterval(interval);
@@ -68,7 +62,7 @@ const Break: FC = () => {
           </div>
         )}
         <img 
-          src={images[currentImageIndex]}
+          src={BREAK_IMAGES[currentImageIndex]}
           alt="nature" 
           className={`break-image ${!isLoading ? 'loaded' : ''}`}
           onLoad={handleImageLoad}
