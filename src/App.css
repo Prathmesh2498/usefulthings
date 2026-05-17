@@ -4,6 +4,10 @@
   flex-direction: column;
 }
 
+.app-signal {
+  background: #1a1a2e;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

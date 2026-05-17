@@ -39,6 +39,13 @@ const About: FC = () => {
             </p>
           </div>
 
+          <div className="feature-card" onClick={() => handleCardClick('/signal')}>
+            <h3 className="feature-title">Signal Garden</h3>
+            <p className="feature-description">
+              A curated RSS feed from your Google Sheet — read without the scroll hole.
+            </p>
+          </div>
+
           <div className="feature-card website-card" onClick={() => window.open('https://prathmesh2498.github.io/pd/', '_blank')}>
             <h3 className="feature-title">Personal Website</h3>
             <p className="feature-description">
