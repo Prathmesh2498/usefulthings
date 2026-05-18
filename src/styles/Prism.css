@@ -1,0 +1,489 @@
+/* Prism — scroll-snap reels + color themes */
+
+/* Theme tokens: set on .signal-reels via prismThemeStyle() in prismTheme.ts */
+
+.signal-reels {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #050508;
+  color: #f4f4f5;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.signal-reels-device {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  max-height: 100dvh;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* --- chrome --- */
+
+.signal-reels-chrome {
+  flex-shrink: 0;
+  z-index: 40;
+  padding: max(0.5rem, env(safe-area-inset-top)) 0.85rem 0.5rem;
+  background: linear-gradient(180deg, #050508 70%, transparent 100%);
+}
+
+.signal-reels-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.signal-reels-home,
+.signal-reels-icon-btn {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s, border-color 0.25s;
+}
+
+.signal-reels-home:active,
+.signal-reels-icon-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.signal-reels-icon-btn:disabled {
+  opacity: 0.45;
+}
+
+.signal-reels-brand {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.signal-reels-brand-text {
+  display: inline-block;
+  background: linear-gradient(
+    135deg,
+    var(--prism-accent-soft) 0%,
+    var(--prism-accent) 45%,
+    var(--prism-accent-dark) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: var(--prism-accent);
+}
+
+@supports (-webkit-background-clip: text) {
+  .signal-reels-brand-text {
+    color: transparent;
+  }
+}
+
+.signal-reels-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.signal-reels-theme {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.signal-reels-theme-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.signal-reels-theme-select {
+  appearance: none;
+  padding: 0.4rem 1.65rem 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--prism-accent-rgb), 0.35);
+  background:
+    rgba(var(--prism-bg-tint), 0.75)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' fill-opacity='0.7' d='M3 4.5 6 7.5 9 4.5'/%3E%3C/svg%3E")
+    no-repeat right 0.55rem center;
+  backdrop-filter: blur(14px);
+  color: var(--prism-accent-soft);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.25s, color 0.25s;
+}
+
+.signal-reels-theme-select:focus {
+  outline: 2px solid rgba(var(--prism-accent-rgb), 0.5);
+  outline-offset: 2px;
+}
+
+.signal-reels-theme-select option {
+  background: #12141a;
+  color: #f4f4f5;
+}
+
+.signal-reels-filters {
+  flex: 1;
+  min-width: 0;
+}
+
+.signal-reels-filter-toggle {
+  width: 100%;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--prism-accent-rgb), 0.25);
+  background: rgba(var(--prism-bg-tint), 0.65);
+  backdrop-filter: blur(14px);
+  color: var(--prism-accent-soft);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.25s, color 0.25s;
+}
+
+.signal-reels-filter-panel {
+  margin-top: 0.45rem;
+  padding: 0.65rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 14, 18, 0.88);
+  backdrop-filter: blur(16px);
+}
+
+.signal-reels-chips {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+  scrollbar-width: none;
+}
+
+.signal-reels-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.signal-reels-chip {
+  flex-shrink: 0;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--prism-accent-rgb), 0.3);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.76rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.25s;
+}
+
+.signal-reels-chip.active {
+  background: linear-gradient(135deg, var(--prism-accent), var(--prism-accent-dark));
+  color: var(--prism-on-accent);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.signal-reels-unread {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.signal-reels-counter {
+  position: absolute;
+  bottom: max(0.85rem, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+
+/* --- scroll feed --- */
+
+.signal-reels-feed {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.signal-reels-feed::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.signal-reel-slide {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+  height: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 0.35rem 0.85rem 0.65rem;
+  display: flex;
+  contain: layout style paint;
+}
+
+/* --- story card --- */
+
+.signal-reel-card {
+  position: relative;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #14182a 0%, #0c0e14 55%, #08080c 100%);
+  border: 1px solid rgba(var(--prism-accent-rgb), 0.18);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: border-color 0.3s;
+}
+
+.signal-reel-card.read {
+  opacity: 0.78;
+}
+
+.signal-reel-glow {
+  position: absolute;
+  top: -20%;
+  right: -30%;
+  width: 70%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(var(--prism-accent-rgb), 0.22) 0%, transparent 70%);
+  pointer-events: none;
+  transition: background 0.3s;
+}
+
+.signal-reel-card-body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: 0;
+  padding: 1.25rem 3.5rem 1.25rem 1.25rem;
+}
+
+.signal-reel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.7rem;
+}
+
+.signal-reel-source {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--prism-accent);
+  transition: color 0.3s;
+}
+
+.signal-reel-cat {
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: rgba(var(--prism-accent-rgb), 0.14);
+  color: var(--prism-accent-soft);
+  transition: background 0.3s, color 0.3s;
+}
+
+.signal-reel-time {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.signal-reel-title {
+  margin: 0 0 0.75rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.4rem, 5.5vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.22;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.signal-reel-summary {
+  margin: 0;
+  font-size: clamp(0.92rem, 3.6vw, 1.02rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.signal-reel-hint {
+  margin: 1.1rem 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(var(--prism-accent-rgb), 0.5);
+  text-align: center;
+  animation: signal-hint-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes signal-hint-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.signal-reel-rail {
+  position: absolute;
+  right: 0.65rem;
+  bottom: 4rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.signal-reel-rail-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+}
+
+.signal-reel-rail-icon {
+  width: 2.85rem;
+  height: 2.85rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.signal-reel-rail-btn:active .signal-reel-rail-icon {
+  transform: scale(0.92);
+  background: rgba(var(--prism-accent-rgb), 0.22);
+}
+
+.signal-reel-rail-label {
+  font-size: 0.62rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* --- empty / loading --- */
+
+.signal-reels-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.signal-reels-muted {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+.signal-reels-state button {
+  padding: 0.55rem 1.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--prism-accent);
+  background: rgba(var(--prism-accent-rgb), 0.12);
+  color: var(--prism-accent);
+  cursor: pointer;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+
+.signal-reels-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid rgba(var(--prism-accent-rgb), 0.15);
+  border-top-color: var(--prism-accent);
+  border-radius: 50%;
+  animation: signal-spin 0.75s linear infinite;
+  transition: border-color 0.25s;
+}
+
+@keyframes signal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- desktop --- */
+
+@media (min-width: 768px) {
+  .signal-reels {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 0%, var(--prism-desktop-glow) 0%, #0a0a0e 55%);
+    transition: background 0.35s;
+  }
+
+  .signal-reels-device {
+    position: relative;
+    width: min(430px, 100vw - 2rem);
+    height: min(900px, 100dvh - 2rem);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.65);
+    overflow: hidden;
+    background: #050508;
+  }
+}

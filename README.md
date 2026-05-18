@@ -8,4 +8,4 @@ Inspired by [neal.fun](https://neal.fun).
 - **Break** – Take a break from scrolling with beautiful nature images  
 - **Pomodoro** – Stay focused with a customizable timer  
 - **Duck** – Explain your problems to a virtual rubber duck
-- **Signal Garden** – Curated RSS reader powered by Google Sheets + Apps Script
+- **Prism** – Curated RSS reader powered by Google Sheets + Apps Script

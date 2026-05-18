@@ -4,8 +4,11 @@
   flex-direction: column;
 }
 
-.app-signal {
-  background: #1a1a2e;
+.app-prism {
+  background: #0d0d12;
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
 }
 
 .App-logo {

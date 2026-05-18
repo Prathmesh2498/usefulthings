@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
         <NavLink to="/break" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Break</NavLink>
         <NavLink to="/pomodoro" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Pomodoro</NavLink>
         <NavLink to="/duck" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Duck</NavLink>
-        <NavLink to="/signal" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Signal</NavLink>
+        <NavLink to="/prism" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Prism</NavLink>
         <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>About</NavLink>
       </div>
     </nav>

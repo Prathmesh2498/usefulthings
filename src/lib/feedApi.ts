@@ -1,12 +1,22 @@
-import { CACHE_TTL_MS, FEED_API_URL, READ_LINKS_KEY } from '../config/feed';
+import {
+  CACHE_TTL_MS,
+  FEED_API_URL,
+  LEGACY_READ_LINKS_KEY,
+  READ_LINKS_KEY,
+} from '../config/feed';
 import type { CachedFeed, FeedResponse } from '../types/feed';
 
-const CACHE_KEY = 'signal_garden_feed_cache';
+const CACHE_KEY = 'prism_feed_cache';
+const LEGACY_CACHE_KEY = 'signal_garden_feed_cache';
 const JSONP_TIMEOUT_MS = 45000;
 
 function readCache(): CachedFeed | null {
   try {
-    const raw = localStorage.getItem(CACHE_KEY);
+    let raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) {
+      raw = localStorage.getItem(LEGACY_CACHE_KEY);
+      if (raw) localStorage.setItem(CACHE_KEY, raw);
+    }
     if (!raw) return null;
     return JSON.parse(raw) as CachedFeed;
   } catch {
@@ -72,7 +82,7 @@ async function fetchFeedHttp(apiUrl: string): Promise<FeedResponse> {
 /** script.google.com blocks fetch (no CORS) and JSONP breaks on redirect — avoid if possible. */
 function fetchFeedJsonp(apiUrl: string): Promise<FeedResponse> {
   return new Promise((resolve, reject) => {
-    const callbackName = `signalGarden_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+    const callbackName = `prism_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
     let script: HTMLScriptElement | null = null;
 
     const cleanup = () => {
@@ -137,7 +147,11 @@ export async function fetchFeed(force = false): Promise<FeedResponse> {
 
 export function getReadLinks(): Set<string> {
   try {
-    const raw = localStorage.getItem(READ_LINKS_KEY);
+    let raw = localStorage.getItem(READ_LINKS_KEY);
+    if (!raw) {
+      raw = localStorage.getItem(LEGACY_READ_LINKS_KEY);
+      if (raw) localStorage.setItem(READ_LINKS_KEY, raw);
+    }
     if (!raw) return new Set();
     return new Set(JSON.parse(raw) as string[]);
   } catch {

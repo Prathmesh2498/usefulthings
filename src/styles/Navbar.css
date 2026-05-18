@@ -50,24 +50,6 @@
   transform: translateY(-2px);
 }
 
-/* Signal Garden: white navbar, dark links */
-.app-signal .navbar {
-  background: #ffffff;
-  backdrop-filter: none;
-  border-bottom: 1px solid #e8e8e8;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-}
-
-.app-signal .nav-link {
-  color: #1a1a2e;
-}
-
-.app-signal .nav-link:hover,
-.app-signal .nav-link.active {
-  background: rgba(30, 107, 60, 0.1);
-  color: #1e6b3c;
-}
-
 @media (max-width: 768px) {
   .nav-links {
     gap: 1rem;

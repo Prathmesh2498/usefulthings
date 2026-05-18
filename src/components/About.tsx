@@ -39,8 +39,8 @@ const About: FC = () => {
             </p>
           </div>
 
-          <div className="feature-card" onClick={() => handleCardClick('/signal')}>
-            <h3 className="feature-title">Signal Garden</h3>
+          <div className="feature-card" onClick={() => handleCardClick('/prism')}>
+            <h3 className="feature-title">Prism</h3>
             <p className="feature-description">
               A curated RSS feed from your Google Sheet — read without the scroll hole.
             </p>
